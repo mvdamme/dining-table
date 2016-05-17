@@ -11,6 +11,11 @@ module DiningTable
       self.columns   = [ ]
       self.options   = options
       initialize_presenter( options )
+      define
+    end
+    
+    def define
+      raise NotImplementedError
     end
     
     def render
