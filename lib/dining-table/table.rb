@@ -9,12 +9,13 @@ module DiningTable
       self.view_context = view_context
       self.index     = 0
       self.columns   = [ ]
+      self.options   = options
       initialize_presenter( options )
     end
     
     def render
       presenter.start_table
-      presenter.render_header
+      presenter.render_header unless no_header
       collection.each_with_index do |object, index_|
         self.index = index_
         presenter.render_row( object )
@@ -30,6 +31,8 @@ module DiningTable
     alias_method :h, :helpers
     
     private
+    
+      attr_accessor :no_header
     
       # auxiliary function
       def column(name, options = {}, &block)
@@ -50,6 +53,10 @@ module DiningTable
       
       def default_presenter
         Presenters::HTMLPresenter
+      end
+      
+      def skip_header
+        self.no_header = true
       end
       
   end
