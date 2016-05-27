@@ -25,7 +25,8 @@ module DiningTable
         def csv
           @csv ||= begin
             self.stringio = StringIO.new
-            CSV.new(stringio)
+            csv_options = options[:csv] || { }
+            CSV.new(stringio, csv_options)
           end
         end
         
