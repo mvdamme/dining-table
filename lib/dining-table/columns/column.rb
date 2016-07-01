@@ -15,7 +15,7 @@ module DiningTable
       
       def value(object)
         if block
-          block.call(object)
+          block.call(object, self)
         else
           object.send(name).try(:to_s) if object.respond_to?(name)
         end
@@ -47,7 +47,7 @@ module DiningTable
             return label_.try(:to_s) 
           end
         end
-      
+
     end
 
   end
