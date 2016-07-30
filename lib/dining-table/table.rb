@@ -52,7 +52,7 @@ module DiningTable
       
       def initialize_presenter( options )
         self.presenter = options[ :presenter ]
-        self.presenter ||= default_presenter.new(options)
+        self.presenter ||= default_presenter.new
         self.presenter.connect_to( self )
       end
       
