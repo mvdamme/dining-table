@@ -116,11 +116,16 @@ module DiningTable
         def options_string(options)
           return '' if options.nil?
           options.each_key.inject('') do |result, key|
-            result += " #{key.to_s}=\"#{ options[key] }\""
+            result += " #{key.to_s}=\"#{ options[key] }\"" if !options_to_skip.include?( key )
             result
           end
         end
         
+        # don't output these keys as html options in options_string
+        def options_to_skip
+          [ :wrap ]
+        end
+
         def wrap_tag
           options[:wrap][:tag]
         end
