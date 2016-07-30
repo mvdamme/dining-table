@@ -6,7 +6,6 @@ module DiningTable
       
       def initialize( *args )
         super
-        self.options = default_options.merge( options )
         self.output  = ''
       end
       
@@ -134,10 +133,6 @@ module DiningTable
           options_ = options[:wrap].dup
           options_.delete(:tag)
           options_
-        end
-        
-        def default_options
-          DiningTable.configuration.html_presenter.default_options
         end
         
     end

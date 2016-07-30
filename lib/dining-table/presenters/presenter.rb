@@ -7,7 +7,7 @@ module DiningTable
       attr_accessor :table, :options, :view_context
       
       def initialize( options = {} )
-        self.options = options
+        self.options = default_options.merge( options )
       end
       
       def connect_to( table )
@@ -35,6 +35,15 @@ module DiningTable
           table.columns
         end
         
+        def default_options
+          presenter = "#{ identifier }_presenter"
+          if DiningTable.configuration.respond_to?( presenter )
+            DiningTable.configuration.send( presenter ).default_options
+          else
+            { }
+          end
+        end
+
     end
 
   end

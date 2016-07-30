@@ -20,9 +20,13 @@ module DiningTable
 
   class Configuration
     attr_accessor :html_presenter
+    attr_accessor :csv_presenter
+    attr_accessor :excel_presenter
 
     def initialize
-      @html_presenter = PresenterConfiguration.new
+      @html_presenter  = PresenterConfiguration.new
+      @csv_presenter   = PresenterConfiguration.new
+      @excel_presenter = PresenterConfiguration.new
     end
   end
 
