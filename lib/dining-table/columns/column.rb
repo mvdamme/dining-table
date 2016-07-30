@@ -26,7 +26,7 @@ module DiningTable
           label = determine_label(:header)
           return label if label
           object_class = table.collection.first.try(:class)
-          object_class.human_attribute_name( name) if object_class
+          object_class.human_attribute_name( name ) if object_class && object_class.respond_to?( :human_attribute_name )
         end
       end
 
