@@ -11,22 +11,36 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Micha\u{eb}l Van Damme"]
-  s.date = "2016-05-09"
-  s.description = "Create tables easily"
+  s.date = "2016-07-31"
+  s.description = "Easily output tabular data, be it in HTML, CSV or XLSX. Create clean table classes instead of messing with views to create nice tables."
   s.email = "michael.vandamme@vub.ac.be"
   s.extra_rdoc_files = [
     "LICENSE",
     "README.md"
   ]
   s.files = [
+    "Gemfile",
+    "Gemfile.lock",
     "LICENSE",
     "README.md",
-    "VERSION"
+    "Rakefile",
+    "VERSION",
+    "dining-table.gemspec",
+    "lib/dining-table.rb",
+    "lib/dining-table/columns/actions_column.rb",
+    "lib/dining-table/columns/column.rb",
+    "lib/dining-table/config.rb",
+    "lib/dining-table/presenters/csv_presenter.rb",
+    "lib/dining-table/presenters/excel_presenter.rb",
+    "lib/dining-table/presenters/html_presenter.rb",
+    "lib/dining-table/presenters/presenter.rb",
+    "lib/dining-table/presenters/spreadsheet_presenter.rb",
+    "lib/dining-table/table.rb"
   ]
   s.homepage = "http://github.com/mvdamme/dining-table"
   s.licenses = ["MIT"]
   s.rubygems_version = "2.4.8"
-  s.summary = "dining-table helps you to create HTML tables and tabular outputs such as CSV and Excel files"
+  s.summary = "Create tables easily. Supports html, csv and xlsx."
 
   if s.respond_to? :specification_version then
     s.specification_version = 4
