@@ -17,10 +17,10 @@ Juwelier::Tasks.new do |gem|
   gem.name = "dining-table"
   gem.homepage = "http://github.com/mvdamme/dining-table"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{Create tables easily. Supports html, csv and xlsx.}
+  gem.description = %Q{Easily output tabular data, be it in HTML, CSV or XLSX. Create clean table classes instead of messing with views to create nice tables.}
   gem.email = "michael.vandamme@vub.ac.be"
-  gem.authors = ["Micha��l Van Damme"]
+  gem.authors = ["Micha\u{eb}l Van Damme"]
   # dependencies defined in Gemfile
 end
 Juwelier::RubygemsDotOrgTasks.new
