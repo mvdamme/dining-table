@@ -289,7 +289,7 @@ You can set default options for the different presenters in an initializer (e.g.
 DiningTable.configure do |config|
   config.html_presenter.default_options = { class: 'table table-bordered table-hover',
                                             wrap: { tag: :div, class: 'table-responsive' } }
-  config.csv_presenter.default_options  = { :csv => { col_sep: ';' } }
+  config.csv_presenter.default_options  = { csv: { col_sep: ';' } }
 end
 ```
 
