@@ -224,15 +224,15 @@ the following in a Rails controller action, for instance:
 ```ruby
 def export_csv
   collection = Car.order(:brand)
-  csv = CarTable.new( collection, nil, :presenter => DiningTable::Presenters::CSVPresenter.new ).render
-  send_data( csv, :filename => 'export.csv', :content_type => "text/csv" )
+  csv = CarTable.new( collection, nil, presenter: DiningTable::Presenters::CSVPresenter.new ).render
+  send_data( csv, filename: 'export.csv', content_type: "text/csv" )
 end
 ```
 
 The CSV Presenter uses the CSV class from the Ruby standard library. Options passed in through the :csv key will be passed on to `CSV.new`:
 
 ```ruby
-csv = CarTable.new( collection, nil, :presenter => DiningTable::Presenters::CSVPresenter.new( csv: { col_sep: ';' } ) ).render
+csv = CarTable.new( collection, nil, presenter: DiningTable::Presenters::CSVPresenter.new( csv: { col_sep: ';' } ) ).render
 ```
 
 CSV options can also be set as defaults, see [Configuration](#configuration) 
@@ -278,7 +278,7 @@ In order to use the Excel presenter, pass it in as a presenter and provide an ax
 ```ruby
 collection = Car.order(:brand)
 # sheet is the axlsx worksheet in which the table will be rendered
-CarTable.new( collection, nil, :presenter => DiningTable::Presenters::ExcelPresenter.new( sheet ) ).render
+CarTable.new( collection, nil, presenter: DiningTable::Presenters::ExcelPresenter.new( sheet ) ).render
 ```
 
 ## Configuration <a name="configuration"></a>
