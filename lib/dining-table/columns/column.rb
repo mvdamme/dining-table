@@ -17,7 +17,7 @@ module DiningTable
         if block
           block.call(object, self)
         else
-          object.send(name).try(:to_s) if object.respond_to?(name)
+          object.send(name) if object.respond_to?(name)
         end
       end
       
