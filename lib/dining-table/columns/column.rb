@@ -44,7 +44,8 @@ module DiningTable
           if options[ name ]
             label_ = options[ name ]
             label_ = label_.call if label_.respond_to?(:call)
-            return label_.try(:to_s) 
+            label_ = label_.to_s if label_.respond_to?(:to_s)
+            return label_
           end
         end
 
