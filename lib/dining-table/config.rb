@@ -31,5 +31,3 @@ module DiningTable
   end
 
 end
-
-SuckerPunch::Backgroundable.configure {}
