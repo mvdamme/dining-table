@@ -281,6 +281,32 @@ collection = Car.order(:brand)
 CarTable.new( collection, nil, presenter: DiningTable::Presenters::ExcelPresenter.new( sheet ) ).render
 ```
 
+## Custom column classes
+
+You can write your own column classes and use them for specific columns. For instance, the following column class will format a date using `I18n`:
+
+```ruby
+class DateColumn < DiningTable::Columns::Column
+  def value(object)
+    val = super
+    I18n.l( val ) if val
+  end
+end
+```
+
+A column class has to be derived from `DiningTable::Columns::Column` and implement the `value` method. The object passed in is the object in the 
+collection for which the current line is being rendered. If you don't have too many custom column classes, an easy place to put the code is in an initializer 
+(e.g. `config/initializers/dining-table.rb`).
+
+You can use custom column classes as follows:
+
+```ruby
+class CarTable < DiningTable::Table
+  def define
+    column :fabrication_date, class: DateColumn
+end
+```
+
 ## Configuration <a name="configuration"></a>
 
 You can set default options for the different presenters in an initializer (e.g. `config/initializers/dining-table.rb`):
