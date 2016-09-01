@@ -44,6 +44,11 @@ module DiningTable
           end
         end
 
+        # implementation adapted from ActiveSupport
+        def blank?( string )
+          string.respond_to?(:empty?) ? !!string.empty? : !string
+        end
+
     end
 
   end

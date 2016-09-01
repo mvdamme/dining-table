@@ -57,7 +57,7 @@ module DiningTable
       
       def render_footer
         footers = columns.each.map(&:footer)
-        if footers.map(&:blank?).uniq != [ true ]
+        if footers.map { |s| blank?(s) }.uniq != [ true ]
           add_tag(:start, :tfoot)
           add_tag(:start, :tr)
           columns.each_with_index do |column, index|
@@ -70,7 +70,7 @@ module DiningTable
       end
 
       def output
-        @output.html_safe
+        @output.respond_to?(:html_safe) ? @output.html_safe : @output
       end
       
       private

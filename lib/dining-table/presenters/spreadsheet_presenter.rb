@@ -19,7 +19,7 @@ module DiningTable
       
       def render_footer
         footers = footer_strings
-        if footers.map(&:blank?).uniq != [ true ]
+        if footers.map { |s| blank?(s) }.uniq != [ true ]
           add_row( footers )
         end
       end
