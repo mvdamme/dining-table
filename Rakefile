@@ -27,8 +27,8 @@ Juwelier::RubygemsDotOrgTasks.new
 
 require 'rake/testtask'
 Rake::TestTask.new(:test) do |test|
-  test.libs << 'lib' << 'test'
-  test.pattern = 'test/**/test_*.rb'
+  test.libs << 'lib' << 'spec'
+  test.pattern = 'spec/**/*_spec.rb'
   test.verbose = true
 end
 

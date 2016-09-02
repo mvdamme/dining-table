@@ -30,6 +30,7 @@ GEM
       semver
     jwt (1.5.1)
     mini_portile2 (2.0.0)
+    minitest (5.9.0)
     multi_json (1.12.0)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
@@ -54,6 +55,7 @@ PLATFORMS
 DEPENDENCIES
   bundler (~> 1.0)
   juwelier (~> 2.1.0)
+  minitest
 
 BUNDLED WITH
    1.12.3
