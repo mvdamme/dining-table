@@ -87,7 +87,7 @@ module DiningTable
         end
       
         def start_tag(tag, options = {})
-          "<#{ tag.to_s } #{ options_string(options) }>"
+          "<#{ tag.to_s }#{ options_string(options) }>"
         end
       
         def end_tag(tag, options = {})
