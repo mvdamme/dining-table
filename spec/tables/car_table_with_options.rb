@@ -4,5 +4,5 @@ class CarTableWithOptions < DiningTable::Table
       object.brand.upcase
     end
     column :stock, :html => { :td_options => { class: 'left' }, :th_options => { class: :left } }
- end
+  end
 end
