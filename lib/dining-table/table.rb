@@ -21,10 +21,12 @@ module DiningTable
     def render
       presenter.start_table
       presenter.render_header unless no_header
+      presenter.start_body
       collection.each_with_index do |object, index_|
         self.index = index_
         presenter.render_row( object )
       end
+      presenter.end_body
       presenter.render_footer
       presenter.end_table
       presenter.output
