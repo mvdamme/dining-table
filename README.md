@@ -1,4 +1,5 @@
 # dining-table
+[![Build Status](https://travis-ci.org/mvdamme/dining-table.png)](https://travis-ci.org/mvdamme/dining-table)
 
 dining-table was inspired by the (now unfortunately unmaintained) [table_cloth](https://github.com/bobbytables/table_cloth) gem. 
 This gem is definitely not a drop-in replacement for [table-cloth](https://github.com/bobbytables/table_cloth), it aims to be less dependent on Rails 
