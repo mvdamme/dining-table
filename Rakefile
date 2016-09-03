@@ -3,11 +3,7 @@
 require 'rubygems'
 require 'bundler'
 begin
-  if ENV['ENV'] == 'test'
-    Bundler.setup(:test)
-  else
-    Bundler.setup(:default, :development)
-  end
+  Bundler.setup(:default, :development)
 rescue Bundler::BundlerError => e
   $stderr.puts e.message
   $stderr.puts "Run `bundle install` to install missing gems"
