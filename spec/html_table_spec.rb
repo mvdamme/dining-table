@@ -1,8 +1,8 @@
 require 'spec_helper'
 require 'collection'
+require 'date_column'
 require 'rexml/document'
 Dir["#{File.dirname(__FILE__)}/tables/**/*.rb"].each {|file| require file }
-
 
 describe 'HTMLTableSpec' do
   before do
@@ -116,6 +116,29 @@ describe 'HTMLTableSpec' do
     end
   end
   
+  it "respects custom columns when specified" do
+    # first without custom column
+    html = CarTableWithOptions.new(@cars, nil, :with_normal_launch_date => true).render
+    doc = document( html )
+    @cars.each_with_index do |car, index|
+      xpath = "/table/tbody/tr[#{ index + 1 }]/td[3]"
+      check_not_empty(doc.elements, xpath)
+      doc.elements.each(xpath) do |element|
+        element.text.must_equal car.launch_date.to_s
+      end
+    end
+    # now with custom date column
+    html = CarTableWithOptions.new(@cars, nil, :with_date_column_launch_date => true).render
+    doc = document( html )
+    @cars.each_with_index do |car, index|
+      xpath = "/table/tbody/tr[#{ index + 1 }]/td[3]"
+      check_not_empty(doc.elements, xpath)
+      doc.elements.each(xpath) do |element|
+        element.text.must_equal DateColumn.localize( car.launch_date )
+      end
+    end
+  end
+
   it "respects presenter options" do
     html = CarTable.new(@cars, nil,
                         :presenter => DiningTable::Presenters::HTMLPresenter.new( :class => 'table table-bordered' ) ).render
