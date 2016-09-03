@@ -56,7 +56,6 @@ DEPENDENCIES
   bundler (~> 1.0)
   juwelier (~> 2.1.0)
   minitest
-  rake
 
 BUNDLED WITH
    1.12.3
