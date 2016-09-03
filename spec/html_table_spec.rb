@@ -96,21 +96,6 @@ describe 'HTMLTableSpec' do
     end
   end
 
-  it "respects presenter options" do
-    html = CarTable.new(@cars, nil,
-                        :presenter => DiningTable::Presenters::HTMLPresenter.new( :class => 'table table-bordered' ) ).render
-    doc = document( html )
-    doc.elements.first.attributes.get_attribute('class').value.must_equal 'table table-bordered'
-  end
-
-  it "correctly wraps the table" do
-    html = CarTable.new(@cars, nil,
-                        :presenter => DiningTable::Presenters::HTMLPresenter.new( :wrap => { :tag => :div, :class => 'table-responsive' } ) ).render
-    doc = REXML::Document.new( html )
-    doc.elements.first.name.must_equal 'div'
-    doc.elements.first.attributes.get_attribute('class').value.must_equal 'table-responsive'
-  end
-
   it "correctly renders a table with actions" do
     html = CarTableWithActions.new(@cars, @view_context).render
     doc = document( html )
@@ -128,6 +113,38 @@ describe 'HTMLTableSpec' do
       doc.elements.each(xpath) do |element|
         element.attributes.get_attribute('class').value.must_equal 'left'
       end
+    end
+  end
+  
+  it "respects presenter options" do
+    html = CarTable.new(@cars, nil,
+                        :presenter => DiningTable::Presenters::HTMLPresenter.new( :class => 'table table-bordered' ) ).render
+    doc = document( html )
+    doc.elements.first.attributes.get_attribute('class').value.must_equal 'table table-bordered'
+  end
+
+  it "correctly wraps the table" do
+    html = CarTable.new(@cars, nil,
+                        :presenter => DiningTable::Presenters::HTMLPresenter.new( :wrap => { :tag => :div, :class => 'table-responsive' } ) ).render
+    doc = REXML::Document.new( html )
+    doc.elements.first.name.must_equal 'div'
+    doc.elements.first.attributes.get_attribute('class').value.must_equal 'table-responsive'
+  end
+
+  it "respects global html options" do
+    DiningTable.configure do |config|
+      config.html_presenter.default_options = { :class => 'table-hover',
+                                                :wrap => { :tag => :div, :class => 'table-responsive' } }
+    end
+    html = CarTable.new(@cars, nil).render
+    doc = REXML::Document.new( html )
+    doc.elements.first.name.must_equal 'div'
+    doc.elements.first.attributes.get_attribute('class').value.must_equal 'table-responsive'
+    table = doc.elements.first.elements.first
+    table.attributes.get_attribute('class').value.must_equal 'table-hover'
+    # reset configuration for other specs
+    DiningTable.configure do |config|
+      config.html_presenter.default_options = {  }
     end
   end
 
