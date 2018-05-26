@@ -305,6 +305,7 @@ You can use custom column classes as follows:
 class CarTable < DiningTable::Table
   def define
     column :fabrication_date, class: DateColumn
+  end
 end
 ```
 
