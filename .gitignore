@@ -38,3 +38,6 @@ build/
 .project
 .ruby-version
 .ruby-gemset
+
+# for gems, don't add Gemfile.lock
+Gemfile.lock
