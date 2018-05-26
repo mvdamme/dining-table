@@ -5,15 +5,15 @@
 # stub: dining-table 0.2.0 ruby lib
 
 Gem::Specification.new do |s|
-  s.name = "dining-table"
+  s.name = "dining-table".freeze
   s.version = "0.2.0"
 
-  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.require_paths = ["lib"]
-  s.authors = ["Micha\u{eb}l Van Damme"]
-  s.date = "2016-09-03"
-  s.description = "Easily output tabular data, be it in HTML, CSV or XLSX. Create clean table classes instead of messing with views to create nice tables."
-  s.email = "michael.vandamme@vub.ac.be"
+  s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
+  s.require_paths = ["lib".freeze]
+  s.authors = ["Micha\u{eb}l Van Damme".freeze]
+  s.date = "2018-05-26"
+  s.description = "Easily output tabular data, be it in HTML, CSV or XLSX. Create clean table classes instead of messing with views to create nice tables.".freeze
+  s.email = "michael.vandamme@vub.ac.be".freeze
   s.extra_rdoc_files = [
     "LICENSE",
     "README.md"
@@ -22,7 +22,6 @@ Gem::Specification.new do |s|
     ".travis.yml",
     "CHANGELOG.md",
     "Gemfile",
-    "Gemfile.lock",
     "LICENSE",
     "README.md",
     "Rakefile",
@@ -49,24 +48,24 @@ Gem::Specification.new do |s|
     "spec/tables/car_table_with_header.rb",
     "spec/tables/car_table_with_options.rb"
   ]
-  s.homepage = "http://github.com/mvdamme/dining-table"
-  s.licenses = ["MIT"]
-  s.rubygems_version = "2.4.8"
-  s.summary = "Create tables easily. Supports html, csv and xlsx."
+  s.homepage = "http://github.com/mvdamme/dining-table".freeze
+  s.licenses = ["MIT".freeze]
+  s.rubygems_version = "2.6.11".freeze
+  s.summary = "Create tables easily. Supports html, csv and xlsx.".freeze
 
   if s.respond_to? :specification_version then
     s.specification_version = 4
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_development_dependency(%q<bundler>, ["~> 1.0"])
-      s.add_development_dependency(%q<juwelier>, ["~> 2.1.0"])
+      s.add_development_dependency(%q<bundler>.freeze, ["~> 1.0"])
+      s.add_development_dependency(%q<juwelier>.freeze, ["~> 2.1.0"])
     else
-      s.add_dependency(%q<bundler>, ["~> 1.0"])
-      s.add_dependency(%q<juwelier>, ["~> 2.1.0"])
+      s.add_dependency(%q<bundler>.freeze, ["~> 1.0"])
+      s.add_dependency(%q<juwelier>.freeze, ["~> 2.1.0"])
     end
   else
-    s.add_dependency(%q<bundler>, ["~> 1.0"])
-    s.add_dependency(%q<juwelier>, ["~> 2.1.0"])
+    s.add_dependency(%q<bundler>.freeze, ["~> 1.0"])
+    s.add_dependency(%q<juwelier>.freeze, ["~> 2.1.0"])
   end
 end
 
