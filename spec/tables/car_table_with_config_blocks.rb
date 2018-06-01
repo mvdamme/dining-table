@@ -4,7 +4,7 @@ class CarTableWithConfigBlocks < DiningTable::Table
     presenter.table_config do |config|
       config.table.class = 'my-table-class'
       config.thead.class = 'my-thead-class'
-    end
+    end if presenter.type?(:html)
 
     presenter.row_config do |config, index, object|
       if index == :header
@@ -16,7 +16,7 @@ class CarTableWithConfigBlocks < DiningTable::Table
         config.tr.class = index.odd? ? 'odd' : 'even'
         config.tr.class += ' lowstock' if object.stock < 10
       end
-    end
+    end if presenter.type?(:html)
 
     column :brand, :html => { :td => { :class => 'left' } }
 
