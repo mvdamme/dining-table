@@ -304,10 +304,10 @@ presenter.table_config do |config|
 end if presenter.type?(:html)
 ```
 Per row configuration can be specified with `presenter.row_config`. The block used with this method is called once for each row being
-rendered, and receives three parameters: the configuration object (identical as with `table_config`), and index value, and the object 
+rendered, and receives three parameters: the configuration object (identical as with `table_config`), an index value, and the object 
 containing the data being rendered in this row. 
 The index value is equal to the row number of the row being rendered (starting at zero), except for the header and footer rows, in which case it
-is equal to `:header` and `:footer`, respectively. `object` is the current object being rendered (`nil` for the header and footer row). 
+is equal to `:header` and `:footer`, respectively. `object` is the current object being rendered (`nil` for the header and footer rows). 
 As above, the passed in configuration object already contains the configuration which is in effect before calling the block.
 
 #### Per cell configuration
