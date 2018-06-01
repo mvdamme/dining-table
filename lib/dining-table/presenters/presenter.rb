@@ -22,7 +22,7 @@ module DiningTable
         identifier == identifier_
       end
       
-      [ :start_table, :end_table, :render_header, :start_body, :end_body, :row, :render_footer, :output ].each do |method|
+      [ :start_table, :end_table, :render_header, :start_body, :end_body, :render_row, :render_footer, :output ].each do |method|
         self.class_eval <<-eos, __FILE__, __LINE__+1
           def #{method}(*args)
           end

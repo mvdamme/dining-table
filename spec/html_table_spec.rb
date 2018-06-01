@@ -63,7 +63,8 @@ describe 'HTMLTableSpec' do
       xpath = "/table/tfoot/tr[1]/td[#{ col_index + 1 }]"
       check_not_empty(doc.elements, xpath)
       doc.elements.each(xpath) do |element|
-        element.text.must_equal footer
+        element.text.must_equal footer if footer
+        element.text.must_be_nil if !footer  # avoid minitest deprecation warning
       end
     end
     # last footer has link
@@ -82,6 +83,28 @@ describe 'HTMLTableSpec' do
         check_not_empty(doc.elements, xpath)
         doc.elements.each(xpath) do |element|
           element.text.must_equal car.send( column ).to_s.upcase
+          class_ = col_index == 0 ? 'center' : 'left'
+          element.attributes.get_attribute('class').value.must_equal class_
+        end
+      end
+    end
+    # also check header
+    [ 1, 2 ].each do |index|
+      doc.elements.each("/table/thead/tr[1]/th[#{ index }]") do |element|
+        class_ = index == 1 ? 'center' : 'left'
+        element.attributes.get_attribute('class').value.must_equal class_
+      end
+    end
+  end
+
+  it "still supports deprecated syntax for html column options" do
+    html = CarTableWithOptionsOldSyntax.new(@cars, nil).render
+    doc = document( html )
+    @cars.each_with_index do |car, index|
+      [ :brand, :stock ].each_with_index do |column, col_index|
+        xpath = "/table/tbody/tr[#{ index + 1 }]/td[#{ col_index + 1 }]"
+        check_not_empty(doc.elements, xpath)
+        doc.elements.each(xpath) do |element|
           class_ = col_index == 0 ? 'center' : 'left'
           element.attributes.get_attribute('class').value.must_equal class_
         end
@@ -140,6 +163,38 @@ describe 'HTMLTableSpec' do
   end
 
   it "respects presenter options" do
+    html = CarTableWithFooter.new(@cars, @view_context,
+                            :presenter => DiningTable::Presenters::HTMLPresenter.new(
+                            :tags => { :table => { :class => 'table table-bordered', :id => 'my_table_id', :'data-custom' => 'custom1!' },
+                                       :thead => { :class => 'mythead', :id => 'my_thead_id', :'data-custom' => 'custom2!' },
+                                       :tbody => { :class => 'mytbody', :id => 'my_tbody_id', :'data-custom' => 'custom3!' },
+                                       :tfoot => { :class => 'mytfoot', :id => 'my_tfoot_id', :'data-custom' => 'custom4!' },
+                                       :tr => { :class => 'mytr', :'data-custom' => 'custom5!' },
+                                       :th => { :class => 'myth', :'data-custom' => 'custom6!' },
+                                       :td => { :class => 'mytd', :'data-custom' => 'custom7!' }
+                                       } ) ).render
+    doc = document( html )
+    table = doc.elements.first
+    check_attributes( table, ['class', 'id', 'data-custom'], ['table table-bordered', 'my_table_id', 'custom1!'])
+    header = table.elements[1] # 1 = first element (not second) in REXML
+    check_attributes( header, ['class', 'id', 'data-custom'], ['mythead', 'my_thead_id', 'custom2!'])
+    body = table.elements[2]   # 2 = second element (not third) in REXML
+    check_attributes( body, ['class', 'id', 'data-custom'], ['mytbody', 'my_tbody_id', 'custom3!'])
+    footer = table.elements[3] # 3 = third element (not fourth) in REXML
+    check_attributes( footer, ['class', 'id', 'data-custom'], ['mytfoot', 'my_tfoot_id', 'custom4!'])
+    row = header.elements.first
+    check_attributes( row, ['class', 'data-custom'], ['mytr', 'custom5!'])
+    row.elements.each do |header_cell|
+      check_attributes( header_cell, ['class', 'data-custom'], ['myth', 'custom6!'])
+    end
+    body.elements.each do |row|
+      check_attributes( row, ['class', 'data-custom'], ['mytr', 'custom5!'])
+    end
+    row = footer.elements.first
+    check_attributes( row, ['class', 'data-custom'], ['mytr', 'custom5!'])
+  end
+
+  it "still supports old (deprecated) way of specifying the table class" do
     html = CarTable.new(@cars, nil,
                         :presenter => DiningTable::Presenters::HTMLPresenter.new( :class => 'table table-bordered' ) ).render
     doc = document( html )
@@ -156,7 +211,7 @@ describe 'HTMLTableSpec' do
 
   it "respects global html options" do
     DiningTable.configure do |config|
-      config.html_presenter.default_options = { :class => 'table-hover',
+      config.html_presenter.default_options = { :tags => { :table => { :class => 'table-hover' }, :tr => { :class => 'rowrow' } },
                                                 :wrap => { :tag => :div, :class => 'table-responsive' } }
     end
     html = CarTable.new(@cars, nil).render
@@ -165,9 +220,42 @@ describe 'HTMLTableSpec' do
     doc.elements.first.attributes.get_attribute('class').value.must_equal 'table-responsive'
     table = doc.elements.first.elements.first
     table.attributes.get_attribute('class').value.must_equal 'table-hover'
+    body = table.elements[2]
+    body.elements.each do |row|
+      row.attributes.get_attribute('class').value.must_equal 'rowrow'
+    end
     # reset configuration for other specs
     DiningTable.configure do |config|
       config.html_presenter.default_options = {  }
+    end
+  end
+
+  it "respects in-table presenter config blocks" do
+    html = CarTableWithConfigBlocks.new(@cars, @view_context).render
+    doc = REXML::Document.new( html )
+    table = doc.elements.first
+    table.attributes.get_attribute('class').value.must_equal 'my-table-class'
+    header = table.elements.first
+    header.attributes.get_attribute('class').value.must_equal 'my-thead-class'
+    row = header.elements.first
+    row.attributes.get_attribute('class').value.must_equal 'header-tr'
+    row.elements.each do |cell|
+      cell.attributes.get_attribute('class').value.must_equal 'header-th'
+    end
+    body = table.elements[2]
+    body.elements.each_with_index do |row, index|
+      row.attributes.get_attribute('class').value.must_match( index.odd? ? /odd/ : /even/ )
+      row.attributes.get_attribute('class').value.must_match( /lowstock/ ) if @cars[index].stock < 10
+      row.elements.each_with_index do |td, td_index|
+        if td_index == 0
+          td.attributes.get_attribute('class').value.must_equal 'left'
+        elsif td_index == 1
+          td.attributes.get_attribute('class').value.must_match( /center/ )
+          td.attributes.get_attribute('class').value.must_match( /five_doors/ ) if @cars[index].number_of_doors == 5
+        else
+          td.attributes.get_attribute('class').must_be_nil if td_index != 1
+        end
+      end
     end
   end
 
@@ -201,6 +289,13 @@ describe 'HTMLTableSpec' do
 
   def check_not_empty(node, xpath)
     not_empty?(node, xpath).must_equal true
+  end
+
+  def check_attributes( element, attributes, values )
+    attributes.each_with_index do |attribute, index|
+      value = values[ index ]
+      element.attributes.get_attribute( attribute ).value.must_equal value
+    end
   end
 
   class ViewContext
