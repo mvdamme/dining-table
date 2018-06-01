@@ -1,10 +1,12 @@
 # dining-table
 [![Build Status](https://travis-ci.org/mvdamme/dining-table.png)](https://travis-ci.org/mvdamme/dining-table)
 
+dining-table allows you to write clean Ruby classes instead of messy view code to generate HTML tables. You can re-use the same classes to 
+generate csv or xlsx output as well.
+
 dining-table was inspired by the (now unfortunately unmaintained) [table_cloth](https://github.com/bobbytables/table_cloth) gem. 
-This gem is definitely not a drop-in replacement for [table-cloth](https://github.com/bobbytables/table_cloth), it aims to be less dependent on Rails 
-(no Rails required to use `dining-table`) and more flexible.
-In addition, it not only supports HTML output but you can output tabular data in csv or xlsx formats as well.
+This gem is definitely not a drop-in replacement for [table_cloth](https://github.com/bobbytables/table_cloth), it aims to be less dependent on Rails 
+(no Rails required to use `dining-table`, in fact it has no dependencies (except if you chose to generate xlsx output)) and more flexible.
 
 ## Installation
 
@@ -185,6 +187,8 @@ end
 
 ### HTML
 
+#### Introduction
+
 The default presenter is HTML (i.e. `DiningTable::Presenters::HTMLPresenter`), so `CarTable.new(@cars, self).render` will generate a table in HTML.
 When defining columns, you can specify options that apply only when using a certain presenter. For example, here we provide css classes for `td` and `th` 
 elements for some columns in the html table:
@@ -193,29 +197,126 @@ elements for some columns in the html table:
 class CarTable < DiningTable::Table
   def define
     column :brand
-    column :number_of_doors, html: { td_options: { class: 'center' }, th_options: { class: :center } }
-    column :stock, html: { td_options: { class: 'center' }, th_options: { class: :center } }
+    column :number_of_doors, html: { td: { class: 'center' }, th: { class: 'center' } }
+    column :stock, html: { td: { class: 'center' }, th: { class: 'center' } }
   end
 end
 ```
 
 The same table class can also be used with other presenters (csv, xlsx or a custom presenter), but the options will only be in effect when using the HTML presenter.
 
-By instantiating the presenter yourself it is possible to specify options. For example:
+#### Presenter configuration
 
-```ruby
-<%= CarTable.new(@cars, self, presenter: DiningTable::Presenters::HTMLPresenter.new( class: 'table table-bordered' )).render %>
-```
-
-It is also possible to wrap the table in another tag (a div for instance):
+By instantiating the presenter yourself it is possible to specify options for a specific table. Using the `:tags` key you can specify
+options for all HTML tags used in the table. Example:
 
 ```ruby
 <%= CarTable.new(@cars, self, 
-                 presenter: DiningTable::Presenters::HTMLPresenter.new( class: 'table table-bordered',
-                                                                        wrap: { tag: :div, class: 'table-responsive' } )).render %>
+                 presenter: DiningTable::Presenters::HTMLPresenter.new( 
+                   tags: { table: { class: 'table table-bordered', id: 'car_table' }, 
+                           tr: { class: 'car_table_row' } } )).render %>
+```
+In the above example, we specify the CSS class and HTML id for the table, and the CSS class to be used for all rows in the table.
+The supported HTML tags are: `table`, `thead`, `tbody`, `tfoot`, `tr`, `th`, `td`.
+
+It is also possible to wrap the table in another tag (a div for instance), and specify options for this tag:
+
+```ruby
+<%= CarTable.new(@cars, self, 
+                 presenter: DiningTable::Presenters::HTMLPresenter.new( 
+                   tags: { table: { class: 'table table-bordered', id: 'car_table' }, 
+                   wrap: { tag: :div, class: 'table-responsive' } )).render %>
 ```
 
-Both of these html options are usually best set as defaults, see [Configuration](#configuration) 
+Most of the html options are usually best set as defaults, see [Configuration](#configuration).
+
+Note that configuration information provided to the presenter constructor is added to the default configuration,
+it doesn't replace it. This means you can have the default configuration define the CSS class for the
+table tag, for instance, and add the html id attribute when initializing the presenter, or from inside the
+table definition.
+
+#### Configuration inside the table definition
+
+It is possible to specify or modify the configuration from within the table definition. This allows you to use custom
+CSS classes, ids, etc. per row or even per cell. Example:
+
+```ruby
+class CarTableWithConfigBlocks < DiningTable::Table
+  def define
+    table_id = options[:table_id]  # custom option, see 'Options' above
+
+    presenter.table_config do |config|
+      config.table.class = 'table-class'
+      config.table.id    = table_id || 'table-id'
+      config.thead.class = 'thead-class'
+    end if presenter.type?(:html)
+
+    presenter.row_config do |config, index, object|
+      if index == :header
+        config.tr.class = 'header-tr'
+        config.th.class = 'header-th'
+      elsif index == :footer
+        config.tr.class = 'footer-tr'
+      else  # normal row
+        config.tr.class = index.odd? ? 'odd' : 'even'
+        config.tr.class += ' lowstock' if object.stock < 10
+      end
+    end if presenter.type?(:html)
+
+    column :brand
+    column :stock, footer: 'Footer text'
+  end
+end
+```
+This example shows how to use `presenter.table_config` to set the configuration for (in this case) the `table` and `thead`tags. The block you use with `table_config`
+is called once, when the table is being rendered. A configuration object is passed in that allows you to set any HTML attribute of the
+seven supported tags. 
+
+Note that the configuration object already contains the pre-existing configuration information (coming
+from either the presenter initialisation and/or from the global configuration), so you can refine the configuration in the block
+instead of having to re-specify it in full. This means you can easily add CSS classes without knowledge of previously existing
+configuration:
+```ruby
+presenter.table_config do |config|
+  config.table.class += ' my-table-class'
+end if presenter.type?(:html)
+```
+Per row configuration can be specified with `presenter.row_config`. The block used with this method is called once for each row being
+rendered, and receives three parameters: the configuration object (identical as with `table_config`), and index value, and the object 
+containing the data being rendered in this row. 
+The index value is equal to the row number of the row being rendered (starting at zero), except for the header and footer rows, in which case it
+is equal to `:header` and `:footer`, respectively. `object` is the current object being rendered (`nil` for the header and footer row). 
+As above, the passed in configuration object already contains the configuration which is in effect before calling the block.
+
+#### Per cell configuration
+
+As shown above, you can specify per column configuration using a hash:
+
+```ruby
+class CarTable < DiningTable::Table
+  def define
+    column :number_of_doors, html: { td: { class: 'center' }, th: { class: 'center' } }
+  end
+end
+```
+For each column, the per column configuration is merged with the row configuration (see `presenter.row_config` above) before
+cells from the column are rendered.
+
+Sometimes, you might want to specify the configuration per cell, for instance to add a CSS class for cells with a certain content.
+This is possible by supplying a lamba or proc instead of a hash: 
+
+```ruby
+class CarTable < DiningTable::Table
+  def define
+    number_of_doors_options = ->( config, index, object ) do
+      config.td.class = 'center'
+      config.td.class += ' five_doors' if object && object.number_of_doors == 5
+    end
+    column :number_of_doors, html: number_of_doors_options
+  end
+end
+```
+The arguments provided to the lambda or proc are the same as in the case of `presenter.row_config`.
 
 ### CSV
 
@@ -315,7 +416,8 @@ You can set default options for the different presenters in an initializer (e.g.
 
 ```ruby
 DiningTable.configure do |config|
-  config.html_presenter.default_options = { class: 'table table-bordered table-hover',
+  config.html_presenter.default_options = { tags: { table: { class: 'table table-bordered' }, 
+                                                    thead: { class: 'header' } },
                                             wrap: { tag: :div, class: 'table-responsive' } }
   config.csv_presenter.default_options  = { csv: { col_sep: ';' } }
 end
@@ -323,4 +425,4 @@ end
 
 ## Copyright
 
-Copyright (c) 2016 Michaël Van Damme. See LICENSE.txt for further details.
+Copyright (c) 2018 Michaël Van Damme. See LICENSE.txt for further details.
