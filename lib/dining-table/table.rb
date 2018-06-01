@@ -27,7 +27,7 @@ module DiningTable
         presenter.render_row( object )
       end
       presenter.end_body
-      presenter.render_footer
+      presenter.render_footer unless no_footer
       presenter.end_table
       presenter.output
     end
@@ -36,11 +36,19 @@ module DiningTable
       view_context
     end
     alias_method :h, :helpers
-    
+
+    def skip_header
+      self.no_header = true
+    end
+
+    def skip_footer
+      self.no_footer = true
+    end
+
     private
     
-      attr_accessor :no_header
-    
+      attr_accessor :no_header, :no_footer
+
       # auxiliary function
       def column(name, options = {}, &block)
         klass = options[:class]
@@ -60,10 +68,6 @@ module DiningTable
       
       def default_presenter
         Presenters::HTMLPresenter
-      end
-      
-      def skip_header
-        self.no_header = true
       end
       
   end

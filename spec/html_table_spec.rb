@@ -74,6 +74,15 @@ describe 'HTMLTableSpec' do
     end
   end
 
+  it "allows skipping header and footer" do
+    @cars = CarWithHumanAttributeName.collection
+    html = CarTableWithoutHeader.new(@cars, @view_context).render
+    doc = REXML::Document.new( html )
+    table = doc.elements.first
+    table.elements.size.must_equal 1  # only body
+    table.elements.first.name.must_equal 'tbody'
+  end
+
   it "correctly renders a table with column options and column blocks" do
     html = CarTableWithOptions.new(@cars, nil).render
     doc = document( html )

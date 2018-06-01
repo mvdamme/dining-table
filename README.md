@@ -73,6 +73,17 @@ end
 
 The custom header can be a string, but also a lambda or a proc.
 
+If for some reason you don't want a header, call `skip_header`:
+
+```ruby
+class CarTable < DiningTable::Table
+  def define
+    skip_header
+    column :brand
+  end
+end
+```
+
 By default, `dining-table` doesn't add a footer to the table, except when at least one column explicitly specifies a footer:
 
 ```ruby
@@ -85,6 +96,17 @@ end
 ```
 
 Please note how the collection passed in when creating the table obect (`@cars` in `CarTable.new(@cars, self)`) is available as `collection`.
+
+Similarly to `skip_header`, if for some reason you don't want a footer (even though at least one column defines one), call `skip_footer`:
+
+```ruby
+class CarTable < DiningTable::Table
+  def define
+    skip_footer
+    column :brand, footer: 'Footer'
+  end
+end
+```
 
 ### Links and view helpers
 
