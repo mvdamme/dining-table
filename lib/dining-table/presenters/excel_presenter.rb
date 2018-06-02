@@ -3,7 +3,10 @@ module DiningTable
   module Presenters
 
     class ExcelPresenter < SpreadsheetPresenter
-      
+
+      attr_accessor :worksheet
+      private :worksheet, :worksheet=
+
       def initialize( worksheet, *args )
         super( *args )
         self.worksheet = worksheet
@@ -15,8 +18,6 @@ module DiningTable
       
       private
       
-        attr_accessor :worksheet
-        
         def add_row(array)
           worksheet.add_row( array )
         end

@@ -5,7 +5,11 @@ module DiningTable
   module Presenters
 
     class CSVPresenter < SpreadsheetPresenter
-      
+
+      attr_writer :output
+      attr_accessor :stringio
+      private :output, :stringio, :output=, :stringio=
+
       def initialize( *args )
         super
         self.output = ''
@@ -21,9 +25,6 @@ module DiningTable
       
       private
       
-        attr_writer :output
-        attr_accessor :stringio
-        
         def csv
           @csv ||= begin
             self.stringio = StringIO.new

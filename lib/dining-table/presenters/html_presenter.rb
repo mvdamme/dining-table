@@ -6,6 +6,9 @@ module DiningTable
 
       attr_accessor :tags_configuration, :table_tags_configuration, :base_tags_configuration, :table_config_block, :row_config_block
 
+      attr_writer :output
+      private :output, :output=
+
       def initialize( options = {} )
         super
         self.base_tags_configuration = HTMLPresenterConfiguration::TagsConfiguration.from_hash( default_options )
@@ -97,8 +100,6 @@ module DiningTable
 
       private
       
-        attr_writer :output
-        
         def output_
           @output
         end

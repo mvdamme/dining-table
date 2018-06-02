@@ -3,7 +3,10 @@ module DiningTable
   class Table
     
     attr_accessor :collection, :presenter, :options, :index, :columns, :action_columns, :view_context
-    
+
+    attr_accessor :no_header, :no_footer
+    private :no_header, :no_footer, :no_header=, :no_footer=
+
     def initialize( collection, view_context, options = {} )
       self.collection = collection
       self.view_context = view_context
@@ -47,8 +50,6 @@ module DiningTable
 
     private
     
-      attr_accessor :no_header, :no_footer
-
       # auxiliary function
       def column(name, options = {}, &block)
         klass = options[:class]
