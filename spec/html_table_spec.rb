@@ -196,8 +196,8 @@ describe 'HTMLTableSpec' do
     row.elements.each do |header_cell|
       check_attributes( header_cell, ['class', 'data-custom'], ['myth', 'custom6!'])
     end
-    body.elements.each do |row|
-      check_attributes( row, ['class', 'data-custom'], ['mytr', 'custom5!'])
+    body.elements.each do |row_|
+      check_attributes( row_, ['class', 'data-custom'], ['mytr', 'custom5!'])
     end
     row = footer.elements.first
     check_attributes( row, ['class', 'data-custom'], ['mytr', 'custom5!'])
@@ -252,10 +252,10 @@ describe 'HTMLTableSpec' do
       cell.attributes.get_attribute('class').value.must_equal 'header-th'
     end
     body = table.elements[2]
-    body.elements.each_with_index do |row, index|
-      row.attributes.get_attribute('class').value.must_match( index.odd? ? /odd/ : /even/ )
-      row.attributes.get_attribute('class').value.must_match( /lowstock/ ) if @cars[index].stock < 10
-      row.elements.each_with_index do |td, td_index|
+    body.elements.each_with_index do |row_, index|
+      row_.attributes.get_attribute('class').value.must_match( index.odd? ? /odd/ : /even/ )
+      row_.attributes.get_attribute('class').value.must_match( /lowstock/ ) if @cars[index].stock < 10
+      row_.elements.each_with_index do |td, td_index|
         if td_index == 0
           td.attributes.get_attribute('class').value.must_equal 'left'
         elsif td_index == 1
