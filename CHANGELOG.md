@@ -1,3 +1,9 @@
+## 1.0.0 (17/06/2018)
+
+* New configuration mechanism for HTML presenter
+* Described new configuration mechanism in readme
+* Documented skip_header and added and documented skip_footer
+
 ## 0.2.1 (26/05/2018)
 
 * Removed Gemfile.lock file
