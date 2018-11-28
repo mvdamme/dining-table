@@ -36,10 +36,39 @@ describe 'HTMLTableSpec' do
       end
     end
   end
-  
+
+  it "correctly renders a table's header when the table body is empty and a class is provided" do
+    html = CarTable.new([], nil, :class => CarWithHumanAttributeName).render
+    doc = document( html )
+    [ 'Brand', 'Number of doors', 'Stock' ].each_with_index do |header, col_index|
+      xpath = "/table/thead/tr[1]/th[#{ col_index + 1 }]"
+      check_not_empty(doc.elements, xpath)
+      doc.elements.each(xpath) do |element|
+        element.text.must_equal header
+      end
+    end
+  end
+
   it "correctly renders a table's header when explicit headers are defined" do
     @cars = CarWithHumanAttributeName.collection
     html = CarTableWithHeader.new(@cars, @view_context).render
+    doc = document( html )
+    [ 'The brand', 'The number of doors' ].each_with_index do |header, col_index|
+      xpath = "/table/thead/tr[1]/th[#{ col_index + 1 }]"
+      check_not_empty(doc.elements, xpath)
+      doc.elements.each(xpath) do |element|
+        element.text.must_equal header
+      end
+    end
+    # last header has link
+    doc.elements.each("/table/thead/tr[1]/th[3]/a") do |element|
+      element.text.must_equal 'Stock'
+      element.attributes.get_attribute('href').value.must_equal "http://www.google.com"
+    end
+  end
+
+  it "correctly renders a table's header when explicit headers are defined and the table body is empty" do
+    html = CarTableWithHeader.new([], @view_context).render
     doc = document( html )
     [ 'The brand', 'The number of doors' ].each_with_index do |header, col_index|
       xpath = "/table/thead/tr[1]/th[#{ col_index + 1 }]"

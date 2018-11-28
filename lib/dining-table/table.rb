@@ -48,6 +48,10 @@ module DiningTable
       self.no_footer = true
     end
 
+    def object_class
+      options[:class]
+    end
+
     private
     
       # auxiliary function

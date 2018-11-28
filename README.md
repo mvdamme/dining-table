@@ -95,7 +95,7 @@ class CarTable < DiningTable::Table
 end
 ```
 
-Please note how the collection passed in when creating the table obect (`@cars` in `CarTable.new(@cars, self)`) is available as `collection`.
+Please note how the collection passed in when creating the table object (`@cars` in `CarTable.new(@cars, self)`) is available as `collection`.
 
 Similarly to `skip_header`, if for some reason you don't want a footer (even though at least one column defines one), call `skip_footer`:
 
@@ -106,6 +106,15 @@ class CarTable < DiningTable::Table
     column :brand, footer: 'Footer'
   end
 end
+```
+#### Empty collection
+
+Note that when the collection to be presented in the table is empty, `dining-table` can't determine table headers 
+that aren't explicitly specified as there are no objects to use with `human_attribute_name`. In order to avoid this 
+edge case, you can pass in the class of the objects normally present in the collection when creating the table:
+
+```ruby
+<%= CarTable.new(@cars, self, class: Car).render %>
 ```
 
 ### Links and view helpers
