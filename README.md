@@ -403,14 +403,14 @@ end
 
 ### Excel (xlsx)
 
-The Excel presenter depends on [axlsx](https://github.com/randym/axlsx). Note that `dining-table` doesn't require `axlsx`, you have to add it to 
+The Excel presenter depends on [xlsxtream](https://github.com/felixbuenemann/xlsxtream) or [axlsx](https://github.com/randym/axlsx). Note that `dining-table` doesn't require either `xlsxtream` or `axlsx`, you have to add one of them to 
 your Gemfile yourself if you want to use the Excel presenter.
 
-In order to use the Excel presenter, pass it in as a presenter and provide an axlsx worksheet:
+In order to use the Excel presenter, pass it in as a presenter and provide a xlsxtream or axlsx worksheet:
 
 ```ruby
 collection = Car.order(:brand)
-# sheet is the axlsx worksheet in which the table will be rendered
+# sheet is the xlsxtream or axlsx worksheet in which the table will be rendered
 CarTable.new( collection, nil, presenter: DiningTable::Presenters::ExcelPresenter.new( sheet ) ).render
 ```
 
