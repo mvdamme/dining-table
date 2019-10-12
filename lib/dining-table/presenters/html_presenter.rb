@@ -77,7 +77,7 @@ module DiningTable
           add_tag(:start, :tr, row_options)
           columns.each_with_index do |column, index|
             value = footers[index]
-            configuration = cell_configuration( tags_configuration, column, :header, nil )
+            configuration = cell_configuration( tags_configuration, column, :footer, nil )
             #render_footer_cell( value, column.options_for( identifier )  )
             render_footer_cell( value, configuration )
           end

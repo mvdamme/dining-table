@@ -295,6 +295,17 @@ describe 'HTMLTableSpec' do
         end
       end
     end
+    footer = table.elements[3]
+    footer.attributes.get_attribute('class').value.must_equal 'my-tfoot-class'
+    row = footer.elements.first
+    row.attributes.get_attribute('class').value.must_equal 'footer-tr'
+    row.elements.each_with_index do |cell, index|
+      if index == 0
+        cell.attributes.get_attribute('class').value.must_equal 'left'  # brand column
+      else
+        cell.attributes.get_attribute('class').value.must_equal 'footer-td'
+      end
+    end
   end
 
   def document( html )
