@@ -1,3 +1,11 @@
+## 1.1.1 (12/10/2019)
+
+* Bugfix - call per-cell configuration block with correct index for footer row
+
+## 1.1.0 (28/11/2018)
+
+* Allow passing in class of object to avoid header edge case when the collection is empty
+
 ## 1.0.0 (17/06/2018)
 
 * New configuration mechanism for HTML presenter
