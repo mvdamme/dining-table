@@ -6,7 +6,7 @@ module DiningTable
       
       def value(object)
         if block
-          @incremental_value = ''
+          @incremental_value = ''.html_safe
           @current_object = object
           self.instance_eval(&block)
           @incremental_value

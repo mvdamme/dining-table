@@ -13,7 +13,7 @@ module DiningTable
         super
         self.base_tags_configuration = HTMLPresenterConfiguration::TagsConfiguration.from_hash( default_options )
         base_tags_configuration.merge_hash( options )
-        self.output  = ''
+        self.output = ''.html_safe
       end
       
       def identifier
@@ -49,7 +49,6 @@ module DiningTable
         columns.each do |column|
           value = column.value( object )
           configuration = cell_configuration( tags_configuration, column, table.index, object )
-          #render_cell( value, column.options_for( identifier ) )
           render_cell( value, configuration )
         end
         add_tag(:end,   :tr)
@@ -62,7 +61,6 @@ module DiningTable
         columns.each do |column|
           value = column.header
           configuration = cell_configuration( tags_configuration, column, :header, nil )
-          #render_header_cell( value, column.options_for( identifier )  )
           render_header_cell( value, configuration )
         end
         add_tag(:end,   :tr)
@@ -78,7 +76,6 @@ module DiningTable
           columns.each_with_index do |column, index|
             value = footers[index]
             configuration = cell_configuration( tags_configuration, column, :footer, nil )
-            #render_footer_cell( value, column.options_for( identifier )  )
             render_footer_cell( value, configuration )
           end
           add_tag(:end,   :tr)
@@ -87,7 +84,7 @@ module DiningTable
       end
 
       def output
-        @output.respond_to?(:html_safe) ? @output.html_safe : @output
+        @output
       end
 
       def table_config(&block)
@@ -110,11 +107,11 @@ module DiningTable
         end
       
         def start_tag(tag, options = {})
-          "<#{ tag.to_s }#{ options_string(options) }>"
+          "<#{ tag.to_s }#{ options_string(options) }>".html_safe
         end
       
         def end_tag(tag, options = {})
-          "</#{ tag.to_s }>"
+          "</#{ tag.to_s }>".html_safe
         end
 
         def render_cell( string, configuration )
