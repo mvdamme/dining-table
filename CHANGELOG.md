@@ -1,3 +1,7 @@
+## 1.1.2 (28/11/2019)
+
+* Bugfix - fix html escaping issue
+
 ## 1.1.1 (12/10/2019)
 
 * Bugfix - call per-cell configuration block with correct index for footer row
