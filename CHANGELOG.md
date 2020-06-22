@@ -1,3 +1,7 @@
+## 1.1.3 (22/06/2020)
+
+* Fix ruby 2.7 deprecation warning
+
 ## 1.1.2 (28/11/2019)
 
 * Bugfix - fix html escaping issue
